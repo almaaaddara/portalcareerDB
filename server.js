@@ -1,15 +1,14 @@
-const express = require('express');
-const cors = require('cors');
+const express = require("express");
 const app = express();
-const port = 5000;
+const {sequelize} = require("./models")
+const port = 8000;
 
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.get('/', (req, res) => {
-    res.send('Almadt`C');
+app.listen(port, async function (){
+    try {
+        await sequelize.authenticate();
+        console.log('Connection has been established successfully.');
+        return console.log(`Server berjalan di port ${port}`);
+      } catch (error) {
+        console.log('Unable to connect to the database:');
+      }
 });
-
-
-app.listen(port, () => console.log(`App listening on port http://localhost:${port}!`));
