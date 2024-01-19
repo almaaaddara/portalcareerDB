@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const {sequelize} = require("./models")
 const port = 8000;
+const router = require('./routes')
+
+app.use(router)
 
 app.listen(port, async function (){
     try {
