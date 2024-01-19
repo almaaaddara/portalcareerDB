@@ -32,6 +32,13 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
+    }, {
+      // Tambahkan opsi berikut untuk menghilangkan kolom 'id'
+      // yang biasanya ditambahkan secara otomatis oleh Sequelize
+      timestamps: true,
+      freezeTableName: true,
+      underscored: true,
+      modelName: 'User',
     });
   },
   async down(queryInterface, Sequelize) {

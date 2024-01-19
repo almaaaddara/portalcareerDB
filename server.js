@@ -3,7 +3,9 @@ const app = express();
 const {sequelize} = require("./models")
 const port = 8000;
 const router = require('./routes')
+const bodyParser = require ('body-parser')
 
+app.use(bodyParser.json());
 app.use(router)
 
 app.listen(port, async function (){

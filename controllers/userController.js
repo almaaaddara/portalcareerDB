@@ -1,7 +1,6 @@
-const {User} = require('../models')
+const { User } = require('../models')
 const bcrypt = require('bcrypt')
 const ApiError = require("../utils/apiError")
-
 
 const register = async (req,res, next) => {
     try {
@@ -17,7 +16,7 @@ const register = async (req,res, next) => {
         }
 
         const saltRounds = 10
-        const hashedPassword = bcrypt.hash(password, saltRounds)
+        const hashedPassword = bcrypt.hashSync(password, saltRounds)
 
         const newUser = await User.create({
             email, 
@@ -27,8 +26,7 @@ const register = async (req,res, next) => {
             message: 'User registered successfully',
             user: {
                 email: newUser.email,
-                password: hashedPassword,
-                // tambahkan field lain yang perlu direspon
+                role: newUser.role,
             },
         })
     } catch (err) {
