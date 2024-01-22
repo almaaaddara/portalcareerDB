@@ -1,6 +1,6 @@
 'use strict';
 const {
-  Model
+  Model, DataTypes
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Peserta extends Model {
@@ -12,25 +12,60 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Peserta.belongsTo(models.User, {
-        foreignKey: 'emailUser',
-        targetKey: 'email',
+        foreignKey: 'id_user',
+        targetKey: 'id',
+        allowNull: 'false',
         onDelete: 'CASCADE', // Optional: Set the deletion behavior
       });
     }
   }
   Peserta.init({
-    nomor_induk: DataTypes.INTEGER,
-    nama: DataTypes.STRING,
-    alamat: DataTypes.STRING,
-    no_whatsapp: DataTypes.STRING,
-    tempat_tanggal_lahir: DataTypes.STRING,
-    jenis_kelamin: DataTypes.STRING,
-    kategori_pendidikan: DataTypes.STRING,
-    tingkat_pendidikan: DataTypes.ENUM('Laki-laki', 'Perempuan'),
-    institusi: DataTypes.STRING,
-    jurusan: DataTypes.STRING,
-    program_studi: DataTypes.STRING,
-    emailUser: DataTypes.STRING,
+    nomor_induk: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    nama: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    alamat: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    no_whatsapp: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    tempat_tanggal_lahir: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    jenis_kelamin: {
+      allowNull: false,
+      type: DataTypes.ENUM("Laki-Laki", "Perempuan"),
+      defaultValue: "Laki-Laki"
+    },
+    kategori_pendidikan: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    tingkat_pendidikan: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    institusi: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    jurusan: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    program_studi: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    id_user: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Peserta',

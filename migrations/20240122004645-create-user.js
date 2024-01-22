@@ -2,36 +2,38 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Programs', {
-      id_program: {
+    await queryInterface.createTable('Users', {
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      nama_program: {
+      email: {
+        allowNull: false,
+        unique: true,
+        type: Sequelize.STRING
+      },
+      password: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      deskripsi_program: {
+      role: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.ENUM("peserta", "sdm", "sekretaris"),
+        defaultValue: "peserta"
       },
-      manfaat_program: {
+      createdAt: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.DATE
       },
-      // createdAt: {
-      //   allowNull: false,
-      //   type: Sequelize.DATE
-      // },
-      // updatedAt: {
-      //   allowNull: false,
-      //   type: Sequelize.DATE
-      // }
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      }
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Programs');
+    await queryInterface.dropTable('Users');
   }
 };

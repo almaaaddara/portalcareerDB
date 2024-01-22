@@ -14,9 +14,18 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Program.init({
-    nama_program: DataTypes.STRING,
-    deskripsi_program: DataTypes.STRING,
-    manfaat_program: DataTypes.STRING
+    nama_program: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    deskripsi_program: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    manfaat_program: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
   }, {
     sequelize,
     modelName: 'Program',

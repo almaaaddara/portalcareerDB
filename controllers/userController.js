@@ -1,6 +1,7 @@
 const { User } = require('../models')
 const bcrypt = require('bcrypt')
-const ApiError = require("../utils/apiError")
+const jwt = require('jsonwebtoken');
+const ApiError = require("../utils/apiError");
 
 const register = async (req,res, next) => {
     try {
@@ -34,9 +35,57 @@ const register = async (req,res, next) => {
       }
 }
 
+const login = async (req, res, next) => {
+    try {
+        const {email, password} = req.body;
+
+        const user = await User.findOne({
+            where: {email},
+        });
+
+        if (user && bcrypt.compareSync(password, user.password)) {
+            const token = jwt.sign(
+              {
+                id: user.id,
+                role: user.role,
+                email: user.email
+              },
+              process.env.JWT_SECRET
+            )
+            res.status(200).json({
+              status: "Success",
+              message: "Login successful",
+              user: {
+                email: user.email,
+                role: user.role,
+            },
+              jwt: token
+            });
+          } else {
+            next(new ApiError("Email or password does not match", 401))
+          }
+        } catch (err) {
+          next(new ApiError(err.message, 500))
+        }
+}
+
+const checkToken = async (req, res, next) => {
+    try {
+      res.status(200).json({
+        status: "Success",
+        data: {
+          user: req.user
+        }
+      })
+    } catch (err) {
+      next(new ApiError(err.message, 500))
+    }
+  }
+
 module.exports = {
     register,
-    // login
+    login,
+    checkToken
 }
 // exports.getAllUser = (req, res) => {
 //     res.status(200).json({

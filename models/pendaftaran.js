@@ -12,33 +12,62 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Pendaftaran.belongsTo(models.Program, {
-        foreignKey: 'programID',
+        foreignKey: 'id_program',
         onDelete: 'CASCADE',
       });
       Pendaftaran.belongsTo(models.Peserta, {
-        foreignKey: 'nomor_induk_peserta',
+        foreignKey: 'id_peserta',
         onDelete: 'CASCADE',
       });
     }
   }
   Pendaftaran.init({
-    // id_pendaftaran: DataTypes.INTEGER,
-    durasi_magang: DataTypes.STRING,
-    tanggal_mulai: DataTypes.DATE,
-    tanggal_selesai: DataTypes.DATE,
-    departemen_magang: DataTypes.STRING,
-    bidang_minat: DataTypes.STRING,
+    durasi_magang: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    tanggal_mulai: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    tanggal_selesai: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    departemen_magang: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    bidang_minat: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     status_pendaftaran: {
-      type: DataTypes.ENUM('Dikirim', 'Direview', 'Diterima', 'Ditolak'),
+      type: DataTypes.ENUM('Dikirim', 'Direview', 'Diterima', 'Ditolak', 'Selesai'),
       defaultValue: 'Dikirim',
     },
-    surat_pengantar: DataTypes.STRING,
-    pas_foto: DataTypes.STRING,
-    pesan_sekretaris: DataTypes.STRING,
-    pesan_sdm: DataTypes.STRING,
-    surat_balasan: DataTypes.STRING,
-    programID: DataTypes.INTEGER,
-    nomor_induk_peserta: DataTypes.INTEGER,
+    surat_pengantar: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    pas_foto: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    pesan_sekretaris: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    pesan_sdm: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    surat_balasan: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    id_program: DataTypes.INTEGER,
+    id_peserta: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Pendaftaran',

@@ -3,18 +3,12 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Pendaftarans', {
-      id_pendaftaran: {
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      // id_pendaftaran: {
-      //   allowNull: false,
-      //   autoIncrement: true,
-      //   primaryKey: true,
-      //   type: Sequelize.INTEGER
-      // },
       durasi_magang: {
         allowNull: false,
         type: Sequelize.STRING
@@ -37,7 +31,7 @@ module.exports = {
       },
       status_pendaftaran: {
         allowNull: false,
-        type: Sequelize.ENUM('Dikirim', 'Direview', 'Diterima', 'Ditolak'),
+        type: Sequelize.ENUM('Dikirim', 'Direview', 'Diterima', 'Ditolak', 'Selesai'),
         defaultValue : "Dikirim"
       },
       surat_pengantar: {
@@ -60,32 +54,32 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      programID: {
+      id_program: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Programs',
-          key: 'id_program',
+          key: 'id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      nomor_induk_peserta: {
+      id_peserta: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Peserta',
-          key: 'nomor_induk',
+          key: 'id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      // createdAt: {
-      //   allowNull: false,
-      //   type: Sequelize.DATE
-      // },
-      // updatedAt: {
-      //   allowNull: false,
-      //   type: Sequelize.DATE
-      // }
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      }
     });
   },
   async down(queryInterface, Sequelize) {

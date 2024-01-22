@@ -3,15 +3,15 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Peserta', {
-      // id: {
-      //   allowNull: false,
-      //   autoIncrement: true,
-      //   primaryKey: true,
-      //   type: Sequelize.INTEGER
-      // },
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
       nomor_induk: {
         allowNull: false,
-        primaryKey: true,
+        unique: true,
         type: Sequelize.INTEGER
       },
       nama: {
@@ -32,7 +32,8 @@ module.exports = {
       },
       jenis_kelamin: {
         allowNull: false,
-        type: Sequelize.ENUM('Laki-laki', 'Perempuan')
+        type: Sequelize.ENUM('Laki-Laki', 'Perempuan'),
+        defaultValue: 'Laki-Laki'
       },
       kategori_pendidikan: {
         allowNull: false,
@@ -54,23 +55,23 @@ module.exports = {
         allowNull: true,
         type: Sequelize.STRING
       },
-      emailUser: {
-        type: Sequelize.STRING,
+      id_user: {
+        type: Sequelize.INTEGER,
         references: {
           model: 'Users',
-          key: 'email',
+          key: 'id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      // createdAt: {
-      //   allowNull: false,
-      //   type: Sequelize.DATE
-      // },
-      // updatedAt: {
-      //   allowNull: false,
-      //   type: Sequelize.DATE
-      // }
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      }
     });
   },
   async down(queryInterface, Sequelize) {
