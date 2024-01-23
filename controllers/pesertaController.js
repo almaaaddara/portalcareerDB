@@ -49,6 +49,68 @@ const addPeserta = async (req, res, next) => {
     }
 }
 
+const findPeserta = async (req, res, next) => {
+    try {
+        const peserta = await Peserta.findAll()
+
+        res.status(200).json({
+            status: "Succes",
+            data: {
+              peserta
+            }
+          })
+    } catch (err) {
+        next(new ApiError(err.message, 500))
+    }
+}
+
+const findPesertaById = async (req, res, next) => {
+    try {
+        const peserta = await Peserta.findOne({
+            where: {id: req.params.id}
+        })
+
+        res.status(200).json({
+            status: "Succes",
+            data: {
+              peserta
+            }
+          })
+    } catch (err) {
+        next(new ApiError(err.message, 500))
+    }
+}
+
+const deletePeserta = async (req, res, next) => {
+    try {
+      const peserta = await Peserta.findOne({
+        where: {
+          id: req.params.id
+        }
+      })
+  
+      if (!peserta) {
+        return next(new ApiError(`Peserta dengan ID ${req.params.id} tidak ditemukan`, 404))
+      }
+  
+      await Peserta.destroy({
+        where: {
+          id: req.params.id
+        }
+      })
+  
+      res.status(200).json({
+        status: "Success",
+        message: "Deleted successfully"
+      })
+    } catch (err) {
+      next(new ApiError(err.message, 500))
+    }
+  }
+
 module.exports = {
     addPeserta,
+    findPeserta,
+    findPesertaById,
+    deletePeserta
   }
