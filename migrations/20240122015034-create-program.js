@@ -15,9 +15,13 @@ module.exports = {
       },
       deskripsi_program: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       manfaat_program: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      syarat_program: {
         allowNull: false,
         type: Sequelize.STRING
       },
@@ -32,6 +36,8 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
+    await queryInterface.removeIndex('Programs', 'manfaat_program');
+    await queryInterface.removeIndex('Programs', 'syarat_program');
     await queryInterface.dropTable('Programs');
   }
 };

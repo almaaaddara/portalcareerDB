@@ -19,16 +19,30 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     deskripsi_program: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false
     },
     manfaat_program: {
       type: DataTypes.STRING,
       allowNull: false
     },
+    syarat_program: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
   }, {
     sequelize,
     modelName: 'Program',
+    indexes: [
+      {
+        unique: false, // Jika ingin membuat indeks non-unique
+        fields: ['manfaat_program'],
+      },
+      {
+        unique: false,
+        fields: ['syarat_program'],
+      },
+    ],
   });
   return Program;
 };
