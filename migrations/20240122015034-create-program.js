@@ -36,8 +36,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeIndex('Programs', 'manfaat_program');
-    await queryInterface.removeIndex('Programs', 'syarat_program');
     await queryInterface.dropTable('Programs');
   }
 };

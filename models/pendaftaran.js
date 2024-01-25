@@ -64,7 +64,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     surat_balasan: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     id_program: DataTypes.INTEGER,
     id_peserta: DataTypes.INTEGER,

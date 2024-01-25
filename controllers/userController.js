@@ -83,10 +83,26 @@ const checkToken = async (req, res, next) => {
     }
   }
 
+  const findUser = async (req, res, next) => {
+    try {
+        const user = await User.findAll()
+
+        res.status(200).json({
+            status: "Succes",
+            data: {
+              user
+            }
+          })
+    } catch (err) {
+        next(new ApiError(err.message, 500))
+    }
+}
+
 module.exports = {
     register,
     login,
-    checkToken
+    checkToken,
+    findUser
 }
 // exports.getAllUser = (req, res) => {
 //     res.status(200).json({

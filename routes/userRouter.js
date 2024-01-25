@@ -9,6 +9,9 @@ router.post("/register", Auth.register)
 
 // endpoint login peserta
 router.post("/login", Auth.login)
-router.get("/", autentikasi, Auth.checkToken)
+router.get("/", 
+autentikasi, Auth.checkToken)
+router.get("/get", Auth.findUser)
+
 
 module.exports = router

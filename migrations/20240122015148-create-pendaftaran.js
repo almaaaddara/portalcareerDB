@@ -51,7 +51,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       surat_balasan: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING
       },
       id_program: {

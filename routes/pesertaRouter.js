@@ -4,11 +4,11 @@ const Peserta = require('../controllers/pesertaController')
 const autentikasi = require("../middleware/auth")
 // const {getAllUser} = require('../controllers/authController')
 
-// endpoint add data peserta
-router.post(
-    "/create",
-    autentikasi,
-    Peserta.addPeserta)
+// // endpoint add data peserta
+// router.post(
+//     "/create",
+//     autentikasi,
+//     Peserta.addPeserta)
 
 // endpoint read all peserta
 router.get("/", Peserta.findPeserta)

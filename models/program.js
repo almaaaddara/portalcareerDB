@@ -33,16 +33,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Program',
-    indexes: [
-      {
-        unique: false, // Jika ingin membuat indeks non-unique
-        fields: ['manfaat_program'],
-      },
-      {
-        unique: false,
-        fields: ['syarat_program'],
-      },
-    ],
   });
   return Program;
 };
