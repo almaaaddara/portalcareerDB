@@ -4,14 +4,24 @@ const Pendaftaran = require('../controllers/pendaftaranController')
 const autentikasi = require("../middleware/auth")
 
 
-// endpoint add data program
-router.post(
-    "/add",
-    autentikasi,
-    Pendaftaran.addPesertaPendaftar)
+// endpoint ganti status review
+router.put(
+    "/:id/review",
+    // autentikasi,
+    Pendaftaran.updateStatusToReviewed)
 
-// endpoint read all peserta
-// router.get("/", Program.findProgram)
+// endpoint ganti status diterima
+router.put(
+    "/:id/terima",
+    // autentikasi,
+    Pendaftaran.updateStatusDiterima)
+
+// endpoint ganti status ditolak
+router.put(
+    "/:id/tolak",
+    // autentikasi,
+    Pendaftaran.updateStatusDitolak)
+
 
 
 module.exports = router

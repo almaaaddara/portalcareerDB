@@ -10,7 +10,7 @@ const fileFilter = (req, file, cb) => {
   if (isAllowedMimeType) {
     return cb(null, true);
   }
-  return cb(new ApiError('Ekstensi gambar tidak valid', 400));
+  return cb(new ApiError('Ekstensi tidak valid', 400));
 };
 
 module.exports = multer({ storage, fileFilter });
