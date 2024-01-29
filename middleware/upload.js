@@ -1,5 +1,5 @@
 const multer = require('multer');
-const ApiError = require('../../utils/apiError');
+const ApiError = require('../utils/apiError');
 
 const storage = multer.memoryStorage();
 const allowedMimeType = ['image/jpg', 'image/png', 'image/jpeg', 'application/pdf'];

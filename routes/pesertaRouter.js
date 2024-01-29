@@ -1,22 +1,27 @@
 const express = require("express");
 const router = express.Router()
 const Peserta = require('../controllers/pesertaController')
-const autentikasi = require("../middleware/auth")
+const autentikasi = require("../middleware/auth");
+const upload = require("../middleware/upload");
 
 // endpoint add data peserta pendaftar
 router.post(
     "/add",
     autentikasi,
+    upload.fields([
+        {name: 'surat_pengantar', maxCount: 1},
+        {name: 'pas_foto', maxCount: 1},
+    ]),
     Peserta.addPesertaPendaftar)
 
 // endpoint read all peserta
-router.get("/", Peserta.findAllPeserta)
+router.get("/get", Peserta.findAllPeserta)
+router.get("/bystatus", Peserta.findDataByStatus)
 
 // endpoint read peserta by id
 router.get("/:id", Peserta.findPesertaById)
 
 
-router.get("/:status_pendaftaran", Peserta.findDataByStatus)
 
 // endpoint delete peserta
 router.delete(

@@ -1,6 +1,7 @@
 const { Peserta, Pendaftaran, Program } = require("../models")
 const ApiError = require("../utils/apiError")
 const Sequelize = require("sequelize")
+const imagekit = require("../libs/imagekit")
 const Op = Sequelize.Op
 
 // Menambahkan data peserta pendaftar baru
@@ -19,40 +20,38 @@ const getProgramId = async (namaProgram) => {
 
 const addPesertaPendaftar = async (req, res, next) => {
   try {
-      const {
-          nomor_induk, 
-          nama, 
-          alamat, 
-          no_whatsapp, 
-          tempat_tanggal_lahir, 
-          jenis_kelamin, 
-          kategori_pendidikan, 
-          tingkat_pendidikan, 
-          institusi, 
-          jurusan, 
-          program_studi,
-          durasi_magang,
-          tanggal_mulai,
-          tanggal_selesai,
-          departemen_magang,
-          bidang_minat,
-          status_pendaftaran,
-          surat_pengantar,
-          pas_foto,
-          pesan_sekretaris,
-          pesan_sdm,
-          surat_balasan
-      } = req.body
+      // const {
+      //     nomor_induk, 
+      //     nama, 
+      //     alamat, 
+      //     no_whatsapp, 
+      //     tempat_tanggal_lahir, 
+      //     jenis_kelamin, 
+      //     kategori_pendidikan, 
+      //     tingkat_pendidikan, 
+      //     institusi, 
+      //     jurusan, 
+      //     program_studi,
+      //     durasi_magang,
+      //     tanggal_mulai,
+      //     tanggal_selesai,
+      //     departemen_magang,
+      //     bidang_minat,
+      //     status_pendaftaran,
+      //     surat_pengantar,
+      //     pas_foto,
+      // } = req.body
+      const userBody = req.body;
       
-      const thisPesertaPendaftar = await Peserta.findOne({
-          where: {nomor_induk}
-      })
-      if (thisPesertaPendaftar) {
-          return next(new ApiError("Nomor induk telah terdaftar", 400))
-      }
-
-      const file = req.file
-      let surat_pengantar_URL, pas_foto_URL, surat_balasan_URL;
+      // const thisPesertaPendaftar = await Peserta.findOne({
+      //     where: {nomor_induk}
+      // })
+      // if (thisPesertaPendaftar) {
+      //     return next(new ApiError("Nomor induk telah terdaftar", 400))
+      // }
+// surat_pengantar_URL,
+      const { file } = req
+      let pas_foto;
       if (file) {
           // dapatkan extension file nya
           const split = file.originalname.split(".")
@@ -61,30 +60,31 @@ const addPesertaPendaftar = async (req, res, next) => {
           // upload file ke imagekit
           const uploadedFile = await imagekit.upload({
               file: file.buffer,
-              fileName: `IMG-${Date.now()}.${extension}`
+              fileName: `File-${Date.now()}.${extension}`
           })
+
+          pas_foto = uploadedFile.url
           
-          if (file.fieldname === 'surat_pengantar') {
-              surat_pengantar_URL = uploadedFile.url;
-          } else if (file.fieldname === 'pas_foto') {
-              pas_foto_URL = uploadedFile.url;
-          } else if (file.fieldname === 'surat_balasan') {
-              surat_balasan_URL = uploadedFile.url;
-          }
+          // if (file.fieldname === 'surat_pengantar') {
+          //     surat_pengantar_URL = uploadedFile.url;
+          // } else if (file.fieldname === 'pas_foto') {
+          //     pas_foto_URL = uploadedFile.url;
+          // }
       }
 
       const newPeserta = await Peserta.create({
-          nomor_induk, 
-          nama, 
-          alamat, 
-          no_whatsapp, 
-          tempat_tanggal_lahir, 
-          jenis_kelamin, 
-          kategori_pendidikan, 
-          tingkat_pendidikan, 
-          institusi, 
-          jurusan, 
-          program_studi,
+          // nomor_induk, 
+          // nama, 
+          // alamat, 
+          // no_whatsapp, 
+          // tempat_tanggal_lahir, 
+          // jenis_kelamin, 
+          // kategori_pendidikan, 
+          // tingkat_pendidikan, 
+          // institusi, 
+          // jurusan, 
+          // program_studi,
+          ...userBody,
           id_user: req.user.id,
       });
 
@@ -92,17 +92,15 @@ const addPesertaPendaftar = async (req, res, next) => {
       const idProgram = await getProgramId(newProgramName);
 
       const newPendaftaran = await Pendaftaran.create({
-          durasi_magang,
-          tanggal_mulai,
-          tanggal_selesai,
-          departemen_magang,
-          bidang_minat,
-          status_pendaftaran,
-          surat_pengantar: surat_pengantar_URL,
-          pas_foto: pas_foto_URL,
-          pesan_sekretaris,
-          pesan_sdm,
-          surat_balasan: surat_balasan_URL,
+          // durasi_magang,
+          // tanggal_mulai,
+          // tanggal_selesai,
+          // departemen_magang,
+          // bidang_minat,
+          // status_pendaftaran,
+          ...userBody,
+          surat_pengantar: "surat_pengantar_URL",
+          pas_foto,
           id_peserta: newPeserta.id,
           id_program: idProgram
       })
@@ -136,9 +134,7 @@ const findAllPeserta = async (req, res, next) => {
 
         res.status(200).json({
             status: "Succes",
-            data: {
-              allData
-            }
+            data: allData
           })
     } catch (err) {
         next(new ApiError(err.message, 500))
@@ -163,9 +159,7 @@ const findPesertaById = async (req, res, next) => {
 
         res.status(200).json({
             status: "Succes",
-            data: {
-              pesertabyid
-            }
+            data: pesertabyid
           })
     } catch (err) {
         next(new ApiError(err.message, 500))
@@ -174,17 +168,19 @@ const findPesertaById = async (req, res, next) => {
 
 // Menampilkan data peserta by status
 const findDataByStatus = async (req, res, next) => {
+  
   try {
-      const { status } = req.params;
-      console.log("Status yang diterima:", status);
+      const { status_pendaftaran } = req.query;
+      if(!status_pendaftaran){
+        return next(new ApiError('Status tidak ditemukan', 404))
+      }
+      console.log("Status yang diterima:", status_pendaftaran);
 
       // Cari pendaftaran yang memiliki status tertentu, sertakan relasi dengan model Peserta
       const data = await Pendaftaran.findAll({
-          where: { status_pendaftaran: status },
-          include: [{ model: Peserta }]
+          where: {status_pendaftaran},
+          include: [Peserta]
       });
-
-      console.log("Data yang ditemukan:", data);
 
       // Kirim respons JSON dengan data yang ditemukan
       res.status(200).json({
