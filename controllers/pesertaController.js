@@ -2,7 +2,7 @@ const { Peserta, Pendaftaran, Program } = require("../models")
 const ApiError = require("../utils/apiError")
 const Sequelize = require("sequelize")
 const imagekit = require("../libs/imagekit")
-const Op = Sequelize.Op
+// const Op = Sequelize.Op
 
 // Menambahkan data peserta pendaftar baru
 const getProgramId = async (namaProgram) => {
@@ -20,102 +20,81 @@ const getProgramId = async (namaProgram) => {
 
 const addPesertaPendaftar = async (req, res, next) => {
   try {
-      // const {
-      //     nomor_induk, 
-      //     nama, 
-      //     alamat, 
-      //     no_whatsapp, 
-      //     tempat_tanggal_lahir, 
-      //     jenis_kelamin, 
-      //     kategori_pendidikan, 
-      //     tingkat_pendidikan, 
-      //     institusi, 
-      //     jurusan, 
-      //     program_studi,
-      //     durasi_magang,
-      //     tanggal_mulai,
-      //     tanggal_selesai,
-      //     departemen_magang,
-      //     bidang_minat,
-      //     status_pendaftaran,
-      //     surat_pengantar,
-      //     pas_foto,
-      // } = req.body
-      const userBody = req.body;
-      
-      // const thisPesertaPendaftar = await Peserta.findOne({
-      //     where: {nomor_induk}
-      // })
-      // if (thisPesertaPendaftar) {
-      //     return next(new ApiError("Nomor induk telah terdaftar", 400))
-      // }
-// surat_pengantar_URL,
-      const { file } = req
-      let pas_foto;
-      if (file) {
-          // dapatkan extension file nya
-          const split = file.originalname.split(".")
-          const extension = split[split.length - 1]
+    const userBody = req.body;
+    const { files } = req;
 
-          // upload file ke imagekit
-          const uploadedFile = await imagekit.upload({
-              file: file.buffer,
-              fileName: `File-${Date.now()}.${extension}`
-          })
+    let surat_pengantar;
+    let pas_foto;
 
-          pas_foto = uploadedFile.url
-          
-          // if (file.fieldname === 'surat_pengantar') {
-          //     surat_pengantar_URL = uploadedFile.url;
-          // } else if (file.fieldname === 'pas_foto') {
-          //     pas_foto_URL = uploadedFile.url;
-          // }
-      }
+    if (files["pdfFile"]) {
+      // Dapatkan ekstensi file
+      const split = files.pdfFile[0].originalname.split(".");
+      const extension = split[split.length - 1];
 
-      const newPeserta = await Peserta.create({
-          // nomor_induk, 
-          // nama, 
-          // alamat, 
-          // no_whatsapp, 
-          // tempat_tanggal_lahir, 
-          // jenis_kelamin, 
-          // kategori_pendidikan, 
-          // tingkat_pendidikan, 
-          // institusi, 
-          // jurusan, 
-          // program_studi,
-          ...userBody,
-          id_user: req.user.id,
+      // Upload file ke imagekit
+      const uploadedFile = await imagekit.upload({
+        file: files.pdfFile[0].buffer,
+        fileName: `File-${Date.now()}.${extension}`,
       });
 
-      const newProgramName = "KP/Magang";
-      const idProgram = await getProgramId(newProgramName);
+      surat_pengantar = uploadedFile.url;
+    }
 
-      const newPendaftaran = await Pendaftaran.create({
-          // durasi_magang,
-          // tanggal_mulai,
-          // tanggal_selesai,
-          // departemen_magang,
-          // bidang_minat,
-          // status_pendaftaran,
-          ...userBody,
-          surat_pengantar: "surat_pengantar_URL",
-          pas_foto,
-          id_peserta: newPeserta.id,
-          id_program: idProgram
-      })
+    if (files["imageFile"]) {
+      // Dapatkan ekstensi file
+      const split = files.imageFile[0].originalname.split(".");
+      const extension = split[split.length - 1];
 
-      res.status(200).json({
-          status: "Success add Peserta Pendaftaran",
-          data: {
-            newPeserta,
-            newPendaftaran
-          }
-        })
+      // Upload file ke imagekit
+      const uploadedFile = await imagekit.upload({
+        file: files.imageFile[0].buffer,
+        fileName: `File-${Date.now()}.${extension}`,
+      });
+
+      pas_foto = uploadedFile.url;
+    }
+
+    const newPeserta = await Peserta.create({
+      ...userBody,
+      id_user: req.user.id,
+    });
+
+    const newProgramName = "KP/Magang";
+    const idProgram = await getProgramId(newProgramName);
+
+    const newPendaftaran = await Pendaftaran.create({
+      ...userBody,
+      surat_pengantar,
+      pas_foto,
+      id_peserta: newPeserta.id,
+      id_program: idProgram
+    });
+
+    res.status(200).json({
+      status: "Success add Peserta Pendaftaran",
+      data: {
+        newPeserta,
+        newPendaftaran,
+      },
+    });
   } catch (err) {
-      next(new ApiError(err.message, 500))
+    next(new ApiError(err.message, 500));
   }
-}
+};
+
+
+// // Fungsi untuk mengunggah file ke ImageKit
+// const uploadToImageKit = async (file) => {
+//   try {
+//     const uploadedFile = await imagekit.upload({
+//       file: file.buffer,
+//       fileName: file.originalname,
+//     });
+//     return uploadedFile.url;
+//   } catch (error) {
+//     throw new ApiError("Gagal mengunggah file ke ImageKit", 500);
+//   }
+// };
 
 // Menampilkan seluruh data peserta
 const findAllPeserta = async (req, res, next) => {

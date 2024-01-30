@@ -5,14 +5,7 @@ const autentikasi = require("../middleware/auth");
 const upload = require("../middleware/upload");
 
 // endpoint add data peserta pendaftar
-router.post(
-    "/add",
-    autentikasi,
-    upload.fields([
-        {name: 'surat_pengantar', maxCount: 1},
-        {name: 'pas_foto', maxCount: 1},
-    ]),
-    Peserta.addPesertaPendaftar)
+router.post("/add", autentikasi, upload, Peserta.addPesertaPendaftar);
 
 // endpoint read all peserta
 router.get("/get", Peserta.findAllPeserta)
