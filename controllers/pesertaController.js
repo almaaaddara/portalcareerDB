@@ -23,6 +23,15 @@ const addPesertaPendaftar = async (req, res, next) => {
     const userBody = req.body;
     const { files } = req;
 
+    const existingUser = await Pendaftaran.findOne({
+      where: {nomor_induk: userBody.nomor_induk}
+  });
+  if (existingUser) {
+      return res.status(400).json({
+          message: "Nomor induk telah terdaftar"
+      });
+  }
+
     let surat_pengantar;
     let pas_foto;
 
@@ -82,69 +91,6 @@ const addPesertaPendaftar = async (req, res, next) => {
   }
 };
 
-
-// // Fungsi untuk mengunggah file ke ImageKit
-// const uploadToImageKit = async (file) => {
-//   try {
-//     const uploadedFile = await imagekit.upload({
-//       file: file.buffer,
-//       fileName: file.originalname,
-//     });
-//     return uploadedFile.url;
-//   } catch (error) {
-//     throw new ApiError("Gagal mengunggah file ke ImageKit", 500);
-//   }
-// };
-
-// Menampilkan seluruh data peserta
-const findAllPeserta = async (req, res, next) => {
-    try {
-        const allData = await Pendaftaran.findAll({
-          include: [Peserta]
-        })
-
-        // Jika tidak ada data yang ditemukan, kirim respons 404
-        if (!allData || allData.length === 0) {
-          return res.status(404).json({
-              status: "Not Found",
-              message: "Data peserta tidak ditemukan"
-          });
-      }
-
-        res.status(200).json({
-            status: "Succes",
-            data: allData
-          })
-    } catch (err) {
-        next(new ApiError(err.message, 500))
-    }
-}
-
-// Menampilkan data peserta pendaftar by id
-const findPesertaById = async (req, res, next) => {
-    try {
-        const pesertabyid = await Pendaftaran.findOne({
-            where: {id: req.params.id},
-            include: [Peserta]
-        })
-
-        // Jika data tidak ditemukan, kirim respons 404
-        if (!pesertabyid) {
-          return res.status(404).json({
-              status: "Not Found",
-              message: "Data tidak ditemukan"
-          });
-      }
-
-        res.status(200).json({
-            status: "Succes",
-            data: pesertabyid
-          })
-    } catch (err) {
-        next(new ApiError(err.message, 500))
-    }
-}
-
 // Menampilkan data peserta by status
 const findDataByStatus = async (req, res, next) => {
   
@@ -203,8 +149,6 @@ const deletePeserta = async (req, res, next) => {
 
 module.exports = {
     addPesertaPendaftar,
-    findAllPeserta,
-    findPesertaById,
     findDataByStatus,
     deletePeserta
   }
