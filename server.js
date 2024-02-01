@@ -4,8 +4,10 @@ const {sequelize} = require("./models")
 const port = 8000;
 const router = require('./routes')
 const bodyParser = require ('body-parser')
+const CorsMiddleware = require("./middleware/cors")
 
 app.use(bodyParser.json());
+app.use(CorsMiddleware)
 app.use(router)
 
 app.listen(port, async function (){
