@@ -23,7 +23,7 @@ const addPesertaPendaftar = async (req, res, next) => {
     const userBody = req.body;
     const { files } = req;
 
-    const existingUser = await Pendaftaran.findOne({
+    const existingUser = await Peserta.findOne({
       where: {nomor_induk: userBody.nomor_induk}
   });
   if (existingUser) {
@@ -81,10 +81,9 @@ const addPesertaPendaftar = async (req, res, next) => {
 
     res.status(200).json({
       status: "Success add Peserta Pendaftaran",
-      data: {
+      data:
         newPeserta,
         newPendaftaran,
-      },
     });
   } catch (err) {
     next(new ApiError(err.message, 500));

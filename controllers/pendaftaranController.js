@@ -148,6 +148,64 @@ const findAllPeserta = async (req, res, next) => {
     }
 }
 
+const updatePesanSekretaris = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { pesan_sekretaris } = req.body;
+
+        // Cari pendaftaran berdasarkan ID
+        const pendaftaran = await Pendaftaran.findByPk(id);
+
+        // Jika pendaftaran tidak ditemukan, kirim respons error
+        if (!pendaftaran) {
+            return next(new ApiError(`Pendaftaran dengan ID ${id} tidak ditemukan`, 404));
+        }
+
+        // Update pesan sekretaris
+        pendaftaran.pesan_sekretaris = pesan_sekretaris;
+
+        // Simpan perubahan ke dalam database
+        await pendaftaran.save();
+
+        res.status(200).json({
+            status: "Success",
+            message: `Pesan sekretaris pada pendaftaran dengan ID ${id} berhasil diupdate`,
+            data: pendaftaran
+        });
+    } catch (err) {
+        next(new ApiError(err.message, 500));
+    }
+};
+
+const updatePesanSDM = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { pesan_sdm } = req.body;
+
+        // Cari pendaftaran berdasarkan ID
+        const pendaftaran = await Pendaftaran.findByPk(id);
+
+        // Jika pendaftaran tidak ditemukan, kirim respons error
+        if (!pendaftaran) {
+            return next(new ApiError(`Pendaftaran dengan ID ${id} tidak ditemukan`, 404));
+        }
+
+        // Update pesan SDM
+        pendaftaran.pesan_sdm = pesan_sdm;
+
+        // Simpan perubahan ke dalam database
+        await pendaftaran.save();
+
+        res.status(200).json({
+            status: "Success",
+            message: `Pesan SDM pada pendaftaran dengan ID ${id} berhasil diupdate`,
+            data: pendaftaran
+        });
+    } catch (err) {
+        next(new ApiError(err.message, 500));
+    }
+};
+
 // Menampilkan data peserta pendaftar by id
 const findPesertaById = async (req, res, next) => {
     try {
@@ -205,6 +263,8 @@ module.exports = {
     findPesertaById,
     findDataByStatus,
     updateStatusToReviewed,
+    updatePesanSekretaris,
+    updatePesanSDM,
     updateStatusDiterima,
     updateStatusDitolak,
     updateSuratBalasan,

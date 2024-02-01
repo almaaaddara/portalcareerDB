@@ -7,7 +7,7 @@ const upload = require("../middleware/upload");
 // endpoint add data peserta pendaftar
 router.post("/add", autentikasi, upload, Peserta.addPesertaPendaftar);
 
-router.get("/bystatus", Peserta.findDataByStatus)
+router.get("/bystatus", autentikasi, Peserta.findDataByStatus)
 
 // endpoint delete peserta
 router.delete(
