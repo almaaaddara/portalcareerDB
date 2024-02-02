@@ -88,7 +88,7 @@ const checkToken = async (req, res, next) => {
         const user = await User.findAll()
 
         res.status(200).json({
-            status: "Succes",
+            status: "Success",
             data: {
               user
             }
@@ -98,45 +98,33 @@ const checkToken = async (req, res, next) => {
     }
 }
 
+const getUserRole = async (req, res, next) => {
+  try {
+    const { role } = req.query;
+    if(!role){
+      return next(new ApiError('Role tidak ditemukan', 404))
+    }
+    console.log("Role yang diterima:", role);
+
+    // Cari pendaftaran yang memiliki status tertentu, sertakan relasi dengan model Peserta
+    const userrole = await User.findAll({
+        where: {role},
+    });
+
+      res.status(200).json({
+          status: "Success",
+          data: userrole
+        })
+  } catch (err) {
+      next(new ApiError(err.message, 500))
+  }
+}
+
+
 module.exports = {
     register,
     login,
     checkToken,
-    findUser
+    findUser,
+    getUserRole
 }
-// exports.getAllUser = (req, res) => {
-//     res.status(200).json({
-//         status: "success",
-//         data: [
-//             {
-//                 "id": "1",
-//                 "nama": "almaa"
-//             },
-//             {
-//                 "id": "2",
-//                 "nama": "olin"
-//             },
-//             {
-//                 "id": "3",
-//                 "nama": "unis"
-//             }
-//         ]
-//     })
-// }
-
-// exports.getAllUser = (req, res) => {
-//     let email = req.body.email;
-//     let password = req.body.password;
-
-//     if (!email && !password) {
-//         return res.status(400).json({
-//             status: "failed",
-//             error: "Validasi gagal"
-//         })
-//     }
-
-//     return res.status(200).json({
-//         status: "success",
-//         message: "validasi berhasil"
-//     })
-// }

@@ -20,11 +20,13 @@ const getProgramId = async (namaProgram) => {
 
 const addPesertaPendaftar = async (req, res, next) => {
   try {
-    const userBody = req.body;
+    const {nomor_induk, nama, alamat, no_whatsapp, tempat_tanggal_lahir, jenis_kelamin, kategori_pendidikan, tingkat_pendidikan, institusi, jurusan, program_studi,
+      durasi_magang, tanggal_mulai, tanggal_selesai, departemen_magang, bidang_minat
+    } = req.body;
     const { files } = req;
 
     const existingUser = await Peserta.findOne({
-      where: {nomor_induk: userBody.nomor_induk}
+      where: {nomor_induk}
   });
   if (existingUser) {
       return res.status(400).json({
@@ -64,7 +66,7 @@ const addPesertaPendaftar = async (req, res, next) => {
     }
 
     const newPeserta = await Peserta.create({
-      ...userBody,
+      nomor_induk, nama, alamat, no_whatsapp, tempat_tanggal_lahir, jenis_kelamin, kategori_pendidikan, tingkat_pendidikan, institusi, jurusan, program_studi,
       id_user: req.user.id,
     });
 
@@ -72,7 +74,7 @@ const addPesertaPendaftar = async (req, res, next) => {
     const idProgram = await getProgramId(newProgramName);
 
     const newPendaftaran = await Pendaftaran.create({
-      ...userBody,
+      durasi_magang, tanggal_mulai, tanggal_selesai, departemen_magang, bidang_minat,
       surat_pengantar,
       pas_foto,
       id_peserta: newPeserta.id,

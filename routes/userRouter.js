@@ -12,6 +12,6 @@ router.post("/login", Auth.login)
 router.get("/", 
 autentikasi, Auth.checkToken)
 router.get("/get", Auth.findUser)
-
+router.get("/role", Auth.getUserRole)
 
 module.exports = router
