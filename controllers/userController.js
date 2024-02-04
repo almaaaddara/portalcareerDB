@@ -1,4 +1,4 @@
-const { User } = require('../models')
+const { User, Peserta, Pendaftaran } = require('../models')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 const ApiError = require("../utils/apiError");
@@ -120,11 +120,34 @@ const getUserRole = async (req, res, next) => {
   }
 }
 
+const getUserJWT = async (req, res, next) => {
+  try {
+    const {token} = req.params;
+    const data = jwt.decode(token);
+
+    if(data) {
+      const user = await User.findOne({
+        where:{email:data.email},
+        include: [{model: Peserta, include:{model: Pendaftaran}}]
+      });
+      if(user) {
+        res.status(200).json({
+          status: "Success",
+          data: user
+        })
+      }
+    }
+  } catch (err) {
+    next(new ApiError(err.message, 500))
+  }
+}
+
 
 module.exports = {
     register,
     login,
     checkToken,
     findUser,
-    getUserRole
+    getUserRole,
+    getUserJWT
 }

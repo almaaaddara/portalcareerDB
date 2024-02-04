@@ -11,6 +11,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      User.hasMany(models.Peserta, {
+        foreignKey: 'id_user',
+        targetKey: 'id',
+        allowNull: 'false',
+        onDelete: 'CASCADE',
+      })
     }
   }
   User.init({

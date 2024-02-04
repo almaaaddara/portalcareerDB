@@ -17,6 +17,13 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: 'false',
         onDelete: 'CASCADE', // Optional: Set the deletion behavior
       });
+
+      Peserta.hasMany(models.Pendaftaran, {
+        foreignKey: 'id_peserta',
+        targetKey: 'id',
+        allowNull: 'false',
+        onDelete: 'CASCADE', // Optional: Set the deletion behavior
+      });
     }
   }
   Peserta.init({
