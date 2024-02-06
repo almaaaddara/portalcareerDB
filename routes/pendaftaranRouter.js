@@ -18,38 +18,32 @@ router.get("/:id", autentikasi, Pendaftaran.findPesertaById)
 router.put(
     "/:id/review",
     autentikasi,
-    checkRole.checkRoleSekretaris,
     Pendaftaran.updateStatusToReviewed)
 
 // endpoint ganti status diterima
 router.put(
     "/:id/terima",
     autentikasi,
-    checkRole.checkRoleSDM,
     Pendaftaran.updateStatusDiterima)
 
 // endpoint ganti status ditolak
 router.put(
     "/:id/tolak",
     autentikasi,
-    checkRole.checkRoleSDM,
     Pendaftaran.updateStatusDitolak)
 
 // endpoint update surat balasan
 router.put("/:id_pendaftaran/surat-balasan",
     autentikasi,
-    checkRole.checkRoleSDM,
     upload,
     Pendaftaran.updateSuratBalasan)
 
 router.put("/:id/pesan-sekretaris", 
     autentikasi, 
-    checkRole.checkRoleSekretaris, 
     Pendaftaran.updatePesanSekretaris)
 
 router.put("/:id/pesan-sdm", 
     autentikasi, 
-    checkRole.checkRoleSDM, 
     Pendaftaran.updatePesanSDM)
 
 module.exports = router
