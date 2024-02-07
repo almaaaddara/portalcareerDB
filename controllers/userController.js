@@ -63,7 +63,11 @@ const login = async (req, res, next) => {
               jwt: token
             });
           } else {
-            next(new ApiError("Email or password does not match", 401))
+            // next(new ApiError("Email or password does not match", 401))
+            res.status(401).json({
+              status: "Failed",
+              message: "Email or Password does not match"
+            })
           }
         } catch (err) {
           next(new ApiError(err.message, 500))
@@ -120,7 +124,7 @@ const getUserRole = async (req, res, next) => {
   }
 }
 
-const getUserJWT = async (req, res, next) => {
+const getPesertaJWT = async (req, res, next) => {
   try {
     const {token} = req.params;
     const data = jwt.decode(token);
@@ -142,6 +146,21 @@ const getUserJWT = async (req, res, next) => {
   }
 }
 
+const getUserJWT = async (req, res, next) => {
+  try {
+    const {token} = req.params;
+    const data = jwt.decode(token);
+
+    if(data) {
+      res.status(200).json({
+        data
+      })
+    }
+  } catch (err) {
+    next(new ApiError(err.message, 500))
+  }
+}
+
 
 module.exports = {
     register,
@@ -149,5 +168,6 @@ module.exports = {
     checkToken,
     findUser,
     getUserRole,
+    getPesertaJWT,
     getUserJWT
 }

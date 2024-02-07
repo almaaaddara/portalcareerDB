@@ -14,6 +14,7 @@ router.get("/",
 autentikasi, Auth.checkToken)
 router.get("/get", Auth.findUser)
 router.get("/role", Auth.getUserRole)
+router.get("/peserta/token/:token", Auth.getPesertaJWT)
 router.get("/token/:token", Auth.getUserJWT)
 
 module.exports = router
